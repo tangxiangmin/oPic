@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        .form-group {
+            width: 400px;
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .form-group label {
+            width: 100px;
+        }
+
+        .form-group input {
+            flex: 1;
+            line-height: 26px;
+        }
+    </style>
+</head>
+<body>
+<form action="" id="qiNiuForm">
+    <div>七牛图床配置</div>
+    <div class="form-group">
+        <label>accessKey:</label> <input type="text" name="accessKey">
+    </div>
+    <div class="form-group">
+        <label>secretKey:</label> <input type="text" name="secretKey">
+    </div>
+    <div class="form-group">
+        <label>bucket:</label> <input type="text" name="bucket">
+    </div>
+    <div class="form-group">
+        <label>host访问主机:</label> <input type="text" name="host">
+    </div>
+    <div class="form-group">
+        <label></label>
+        <button id="submit" type="button">保存</button>
+    </div>
+</form>
+<script>
+
+  const configUtil = require('../util/config');
+  const page = {
+    init() {
+      this.readLocalConfig();
+      this.listenEvent()
+    },
+    walkInput(cb){
+      let qiNiuForm = document.querySelector('#qiNiuForm');
+      let aInputs = qiNiuForm.querySelectorAll('input');
+      Array.from(aInputs)
+        .forEach(cb);
+    },
+    readLocalConfig() {
+      let config = configUtil.getConfig();
+      const { aInputs } = this;
+
+      const { qiNiu } = config.upload;
+      this.walkInput((input)=>{
+        let name = input.name;
+        input.value = qiNiu[name];
+      })
+    },
+    saveConfig() {
+      let config = configUtil.getConfig();
+      const { qiNiu } = config.upload;
+      this.walkInput((input)=>{
+        let name = input.name;
+        qiNiu[name] = input.value
+      })
+      configUtil.saveConfig(config)
+    },
+    listenEvent() {
+      let oBtn = document.querySelector('#submit');
+      oBtn.addEventListener('click', () => {
+        this.saveConfig();
+      });
+    }
+  };
+
+  page.init();
+</script>
+</body>
+</html>

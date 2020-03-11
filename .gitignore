@@ -2,3 +2,5 @@ node_modules
 out
 src/tmp
 .idea
+src/config.json
+

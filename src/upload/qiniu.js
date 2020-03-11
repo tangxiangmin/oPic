@@ -4,10 +4,10 @@ const qiniu = require('qiniu');
 const path = require('path');
 
 const createUploadQiNiu = (opts) => {
-  const { accesskey, secretkey, bucket, host } = opts;
+  const { accessKey, secretKey, bucket, host } = opts;
 
   return (filePath) => {
-    const key = `img/${path.basename(filePath)}`;
+    const key = `oPic/${path.basename(filePath)}`;
 
     // 设置上传策略
     const putPolicy = new qiniu.rs.PutPolicy({
@@ -15,7 +15,7 @@ const createUploadQiNiu = (opts) => {
     });
 
     // 根据密钥创建鉴权对象mac，获取上传token
-    const mac = new qiniu.auth.digest.Mac(accesskey, secretkey);
+    const mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
     const uploadToken = putPolicy.uploadToken(mac);
 
     // 配置对象

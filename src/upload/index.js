@@ -2,17 +2,16 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const createUploadQiNiu = require('./qiniu');
+const configUtil = require('../util/config');
 
 function qiNiuUpload(img) {
-  let qiNiuConfig;
   try {
-    // eslint-disable-next-line global-require
-    qiNiuConfig = require('../config/qiniu'); // todo 配置七牛
-    const upload = createUploadQiNiu(qiNiuConfig);
+    const { upload: uploadConfig } = configUtil.getConfig();
+    const upload = createUploadQiNiu(uploadConfig.qiNiu);
 
     return upload(img);
   } catch (e) {
-    console.error('缺少config/qiniu.js配置文件');
+    console.log('缺少config.json配置文件');
     return Promise.reject(e);
   }
 }
