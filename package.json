@@ -29,9 +29,7 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn",
-        "icon": "src/assets/upload@3x",
-        "overwrite": true
+        "packageManager": "yarn"
       },
       "electronWinstallerConfig": {
         "name": "opic"
