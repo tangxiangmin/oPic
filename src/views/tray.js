@@ -1,58 +1,9 @@
 import { Menu, Tray, BrowserWindow } from 'electron';
 
 const path = require('path');
-const clipboard = require('electron').clipboard;
 
-const { uploadBufferImage } = require('../upload');
 const configUtil = require('../util/config');
-const Util = require('../util/index');
-
-const copyUrl = (url) => {
-  const config = configUtil.getConfig();
-  const text = config.autoMarkdown ? Util.createMarkdownImage(url) : url;
-
-  clipboard.writeText(text);
-  return text;
-};
-
-const uploadList = []; // 将已上传的图片保存在内存中 todo 保存到本地
-// 根据剪切板图片创建menuItem
-const createClipboardImageItem = () => {
-  const clipboardImage = clipboard.readImage();
-  if (!clipboardImage || clipboardImage.isEmpty()) return null;
-  const radio = clipboardImage.getAspectRatio();
-  const img = clipboardImage.resize({
-    width: 100,
-    height: radio / 100,
-  });
-
-  const upload = () => {
-    const buffer = clipboardImage.toPNG();
-    uploadBufferImage(buffer).then((url) => {
-      uploadList.push({
-        img,
-        url,
-      });
-      copyUrl(url);
-      Util.showNotify(`上传到七牛成功，链接${url}已经复制到剪切板`);
-    });
-  };
-  return { label: '1',
-    icon: img,
-    type: 'normal',
-    click: upload };
-};
-
-const createUploadItem = () => uploadList.map(({ img, url }, index) => {
-  const handler = () => {
-    const text = copyUrl(url);
-    Util.showNotify(`链接${text}已经复制到剪切板`);
-  };
-  return { label: (index + 1).toString(),
-    icon: img,
-    type: 'normal',
-    click: handler };
-});
+const { createClipboardImageItem, createUploadItem, clearRecordList } = require('./menuItem');
 
 // 打开设置弹窗
 let settingWindow;
@@ -68,6 +19,7 @@ const openSettingWindow = () => {
   settingWindow.on('closed', () => { settingWindow = null; });
 };
 
+// 设置markdown格式url开关
 const saveMarkdownFlag = (item) => {
   const config = configUtil.getConfig();
   const { checked } = item;
@@ -78,10 +30,10 @@ const saveMarkdownFlag = (item) => {
 
 // 创建顶部图标
 const createTray = (app) => {
-  const icon16 = path.resolve(__dirname, '../assets/icon16.png');
+  const icon16 = path.resolve(__dirname, '../assets/upload@3x.png');
   const tray = new Tray(icon16);
 
-  tray.setToolTip('oPic: upload fast');
+  tray.setToolTip('oPic: upload simplify');
   tray.setIgnoreDoubleClickEvents(true);
 
   tray.on('click', () => {
@@ -100,31 +52,27 @@ const createTray = (app) => {
       { label: '', type: 'separator' },
       { label: 'markdown图片格式', type: 'checkbox', checked: config.autoMarkdown, click: saveMarkdownFlag },
       { label: '偏好设置', type: 'normal', click: openSettingWindow },
+      { label: '清除图片记录', type: 'normal', click: clearRecordList },
       more,
     ];
 
-    const getIndexByLabel = (label) => {
-      // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < template.length; ++i) {
-        if (template[i].label === label) return i;
-      }
-      return -1;
-    };
+    const getIndexByLabel = label => template.map(item => item.label).indexOf(label);
 
     // 如果剪切板中有图片，则添加到待上传列表
-    const imageItem = createClipboardImageItem();
-    if (imageItem) {
-      const todoInsertIdx = getIndexByLabel('待上传') + 1; // 在separator插入图片上传
-      template.splice(todoInsertIdx, 0, imageItem);
+    const clipboardImageList = createClipboardImageItem();
+    if (clipboardImageList && clipboardImageList.length) {
+      const todoInsertIdx = getIndexByLabel('待上传') + 1; // 在separator插入待上传图片
+      template.splice(todoInsertIdx, 0, ...clipboardImageList);
     }
 
-    if (uploadList && uploadList.length) {
-      const uploadInsertIdx = getIndexByLabel('已上传') + 1; // 在separator插入图片上传
-      const list = createUploadItem();
-      template.splice(uploadInsertIdx, 0, ...list);
+    // 如果有历史上传记录，则把相关记录展示
+    const uploadImageList = createUploadItem();
+    if (uploadImageList && uploadImageList.length) {
+      const uploadInsertIdx = getIndexByLabel('已上传') + 1; // 在separator插入已上传图片
+      template.splice(uploadInsertIdx, 0, ...uploadImageList);
     }
 
-    // 创建
+    // 创建contextMenu并弹出
     const contextMenu = Menu.buildFromTemplate(template);
     tray.popUpContextMenu(contextMenu);
   });

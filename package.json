@@ -29,7 +29,9 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn"
+        "packageManager": "yarn",
+        "icon": "src/assets/upload@3x",
+        "overwrite": true
       },
       "electronWinstallerConfig": {
         "name": "opic"
@@ -47,7 +49,6 @@
     }
   },
   "dependencies": {
-    "dayjs": "^1.8.22",
     "electron-compile": "^6.4.4",
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^8.1.0",
