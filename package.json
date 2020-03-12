@@ -50,6 +50,9 @@
     "electron-compile": "^6.4.4",
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^8.1.0",
+    "imagemin": "^7.0.1",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-pngquant": "^8.0.0",
     "qiniu": "^7.3.0"
   },
   "devDependencies": {

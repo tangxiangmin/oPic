@@ -19,11 +19,11 @@ const openSettingWindow = () => {
   settingWindow.on('closed', () => { settingWindow = null; });
 };
 
-// 设置markdown格式url开关
-const saveMarkdownFlag = (item) => {
+// 保存开关
+const saveConfig = (key, item) => {
   const config = configUtil.getConfig();
   const { checked } = item;
-  config.autoMarkdown = checked;
+  config[key] = checked;
 
   configUtil.saveConfig(config);
 };
@@ -50,7 +50,8 @@ const createTray = (app) => {
       { label: '', type: 'separator' },
       { label: '已上传', type: 'normal', enabled: false },
       { label: '', type: 'separator' },
-      { label: 'markdown图片格式', type: 'checkbox', checked: config.autoMarkdown, click: saveMarkdownFlag },
+      { label: 'markdown图片格式', type: 'checkbox', checked: config.autoMarkdown, click: saveConfig.bind(null, 'autoMarkdown') },
+      { label: '上传前压缩图片', type: 'checkbox', checked: config.compressImage, click: saveConfig.bind(null, 'compressImage') },
       { label: '偏好设置', type: 'normal', click: openSettingWindow },
       { label: '清除图片记录', type: 'normal', click: clearRecordList },
       more,

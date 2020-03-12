@@ -42,7 +42,7 @@ const createClipboardImageItem = () => {
     });
 
     // 将图片暂存在clipboardImageList中
-    addToImageList(clipboardImageList, { img, row: clipboardImage });
+    addToImageList(clipboardImageList, { img, raw: clipboardImage }, 1);
   }
 
   return clipboardImageList.map((row, index) => {
@@ -58,6 +58,9 @@ const createClipboardImageItem = () => {
         // 自动复制url
         copyUrl(url);
         Util.showNotify(`上传到七牛成功，链接${url}已经复制到剪切板`);
+      }).catch((e) => {
+        console.log(e);
+        Util.showNotify('图片上传失败');
       });
     };
     return { label: (index + 1).toString(),

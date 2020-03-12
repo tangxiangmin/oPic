@@ -3,7 +3,8 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const defaultConfig = {
-  autoMarkdown: true,
+  autoMarkdown: true, // 复制url格式自动转markdown
+  compressImage: true, // 上传前压缩图片
   upload: {
     qiNiu: {
       accessKey: '',
