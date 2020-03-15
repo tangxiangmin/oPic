@@ -5,15 +5,29 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit();
 }
 
+let tray;
+
+const createGlobalTray = () => {
+  tray = createTray(app);
+};
+
 app.on('ready', () => {
-  createTray(app);
+  createGlobalTray();
   // 隐藏dock图标
   Menu.setApplicationMenu(null);
-  app.dock.hide();
+  if (app.dock && app.dock.hide) {
+    app.dock.hide();
+  }
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (!tray) {
+    createGlobalTray();
   }
 });

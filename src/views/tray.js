@@ -77,6 +77,7 @@ const createTray = (app) => {
     const contextMenu = Menu.buildFromTemplate(template);
     tray.popUpContextMenu(contextMenu);
   });
+  return tray;
 };
 
 // eslint-disable-next-line import/prefer-default-export
