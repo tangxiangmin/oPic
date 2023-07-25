@@ -1,7 +1,7 @@
-import { app, Menu } from 'electron';
-import { createTray } from './views/tray';
+const { app, Menu } = require('electron');
+const {createTray} = require('./views/tray')
 
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+if (require('electron-squirrel-startup')) {
   app.quit();
 }
 

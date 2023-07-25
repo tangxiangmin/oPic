@@ -1,25 +1,21 @@
 const fs = require('fs-extra');
 const path = require('path');
 
+const webp=require('webp-converter');
 
-const imageMin = require('imagemin');
-const imageJPEG = require('imagemin-jpegtran');
-const imagePNG = require('imagemin-pngquant');
+// const imageMin = require('imagemin');
+// const imageJPEG = require('imagemin-jpegtran');
+// const imagePNG = require('imagemin-pngquant');
 
 const createUploadQiNiu = require('./qiniu');
 const configUtil = require('../util/config');
 
 // 图片压缩
-function compressImage(filePath, destination) {
-  return imageMin([filePath], {
-    destination,
-    plugins: [
-      imageJPEG(),
-      imagePNG({
-        quality: [0.6, 0.8],
-      }),
-    ],
-  });
+async function compressImage(filePath, destination) {
+  const {dir,name} = path.parse(filePath)
+  const target =dir + '/' + name + '.webp'
+  await webp.cwebp(filePath, target,"-q 80",logging="-v");
+  return target
 }
 
 function qiNiuUpload(img) {
@@ -34,17 +30,17 @@ function qiNiuUpload(img) {
   }
 }
 
-// todo 上传前压缩图片
 async function uploadBufferImage(buffer) {
   const { compressImage: needCompress } = configUtil.getConfig();
   const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   const folder = path.resolve(__dirname, '../tmp/');
-  const filePath = `${folder}/${fileName}.png`;
+  await fs.ensureDir(folder)
+  let filePath = `${folder}/${fileName}.png`;
 
   await fs.writeFile(filePath, buffer); // 创建临时本地文件
   // 图片压缩为同名图片
   if (needCompress) {
-    await compressImage(filePath, folder);
+   filePath = await compressImage(filePath, folder);
   }
   const url = await qiNiuUpload(filePath); // 上传到七牛
 

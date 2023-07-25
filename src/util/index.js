@@ -1,5 +1,5 @@
 
-import { Notification } from 'electron';
+const { Notification } =require('electron');
 
 const showNotify = (msg) => {
   const notify = new Notification({ title: '通知', body: msg });

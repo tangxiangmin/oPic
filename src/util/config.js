@@ -26,8 +26,9 @@ function getConfig() {
   }
 }
 // 保存配置
-function saveConfig(config) {
+async function saveConfig(config) {
   const fileName = path.resolve(__dirname, configFile);
+  await fs.ensureFile(fileName)
   return fs.writeFile(fileName, JSON.stringify(config));
 }
 

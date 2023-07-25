@@ -1,4 +1,4 @@
-import { clipboard } from 'electron';
+const { clipboard } =require('electron');
 
 const uploadList = []; // 将已上传的图片保存在内存中 todo 保存到本地
 const clipboardImageList = []; // 保存最近未上传的图片

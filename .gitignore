@@ -3,4 +3,4 @@ out
 src/tmp
 .idea
 src/config.json
-
+.DS_Store

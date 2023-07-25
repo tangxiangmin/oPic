@@ -1,4 +1,4 @@
-import { Menu, Tray, BrowserWindow } from 'electron';
+const { Menu, Tray, BrowserWindow } = require('electron')
 
 const path = require('path');
 
@@ -81,4 +81,4 @@ const createTray = (app) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { createTray };
+module.exports ={ createTray };
