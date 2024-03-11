@@ -1,5 +1,5 @@
 const { app, Menu } = require('electron');
-const {createTray} = require('./views/tray')
+const { createTray } = require('./views/tray');
 
 if (require('electron-squirrel-startup')) {
   app.quit();

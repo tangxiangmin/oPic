@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title></title>
-    <style>
-        .form-group {
-            width: 400px;
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
+  <meta charset="utf-8">
+  <title></title>
+  <style>
+      .form-group {
+          width: 400px;
+          display: flex;
+          align-items: center;
+          margin: 10px 0;
+      }
 
-        .form-group label {
-            width: 100px;
-        }
+      .form-group label {
+          width: 100px;
+      }
 
-        .form-group input {
-            flex: 1;
-            line-height: 26px;
-        }
-    </style>
+      .form-group input {
+          flex: 1;
+          line-height: 26px;
+      }
+  </style>
 </head>
 <body>
 <form action="" id="qiNiuForm">
-    <div>七牛图床配置</div>
-    <div class="form-group">
-        <label>accessKey:</label> <input type="text" name="accessKey">
-    </div>
-    <div class="form-group">
-        <label>secretKey:</label> <input type="text" name="secretKey">
-    </div>
-    <div class="form-group">
-        <label>bucket:</label> <input type="text" name="bucket">
-    </div>
-    <div class="form-group">
-        <label>host访问主机:</label> <input type="text" name="host">
-    </div>
-    <div class="form-group">
-        <label></label>
-        <button id="submit" type="button">保存</button>
-    </div>
+  <div>七牛图床配置</div>
+  <div class="form-group">
+    <label>accessKey:</label> <input type="text" name="accessKey">
+  </div>
+  <div class="form-group">
+    <label>secretKey:</label> <input type="text" name="secretKey">
+  </div>
+  <div class="form-group">
+    <label>bucket:</label> <input type="text" name="bucket">
+  </div>
+  <div class="form-group">
+    <label>host访问主机:</label> <input type="text" name="host">
+  </div>
+  <div class="form-group">
+    <label></label>
+    <button id="submit" type="button">保存</button>
+  </div>
 </form>
 <script>
 
@@ -47,9 +47,9 @@
   const page = {
     init() {
       this.readLocalConfig();
-      this.listenEvent()
+      this.listenEvent();
     },
-    walkInput(cb){
+    walkInput(cb) {
       let qiNiuForm = document.querySelector('#qiNiuForm');
       let aInputs = qiNiuForm.querySelectorAll('input');
       Array.from(aInputs)
@@ -60,19 +60,19 @@
       const { aInputs } = this;
 
       const { qiNiu } = config.upload;
-      this.walkInput((input)=>{
+      this.walkInput((input) => {
         let name = input.name;
         input.value = qiNiu[name];
-      })
+      });
     },
     saveConfig() {
       let config = configUtil.getConfig();
       const { qiNiu } = config.upload;
-      this.walkInput((input)=>{
+      this.walkInput((input) => {
         let name = input.name;
-        qiNiu[name] = input.value
-      })
-      configUtil.saveConfig(config)
+        qiNiu[name] = input.value;
+      });
+      configUtil.saveConfig(config);
     },
     listenEvent() {
       let oBtn = document.querySelector('#submit');

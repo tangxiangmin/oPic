@@ -1,14 +1,9 @@
-
-
 const qiniu = require('qiniu');
-const path = require('path');
 
 const createUploadQiNiu = (opts) => {
   const { accessKey, secretKey, bucket, host } = opts;
 
-  return (filePath) => {
-    const key = `oPic/${path.basename(filePath)}`;
-
+  return (key, filePath) => {
     // 设置上传策略
     const putPolicy = new qiniu.rs.PutPolicy({
       scope: `${bucket}:${key}`,
@@ -31,7 +26,9 @@ const createUploadQiNiu = (opts) => {
 
     return new Promise((resolve, reject) => {
       formUploader.putFile(uploadToken, key, filePath, putExtra, (respErr, respBody, respInfo) => {
-        if (respErr) { reject(respErr); }
+        if (respErr) {
+          reject(respErr);
+        }
 
         if (respInfo && respInfo.statusCode === 200) {
           // 拼接服务器路径

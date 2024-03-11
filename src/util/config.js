@@ -1,4 +1,3 @@
-
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -16,6 +15,7 @@ const defaultConfig = {
 };
 
 const configFile = '../config.json';
+
 // 获取配置
 function getConfig() {
   try {
@@ -25,10 +25,11 @@ function getConfig() {
     return defaultConfig;
   }
 }
+
 // 保存配置
 async function saveConfig(config) {
   const fileName = path.resolve(__dirname, configFile);
-  await fs.ensureFile(fileName)
+  await fs.ensureFile(fileName);
   return fs.writeFile(fileName, JSON.stringify(config));
 }
 

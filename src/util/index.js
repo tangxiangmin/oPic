@@ -1,5 +1,4 @@
-
-const { Notification } =require('electron');
+const { Notification } = require('electron');
 
 const showNotify = (msg) => {
   const notify = new Notification({ title: '通知', body: msg });
@@ -8,7 +7,6 @@ const showNotify = (msg) => {
 
 // 返回图片的markdown形式
 const createMarkdownImage = url => `![](${url})`;
-
 
 module.exports = {
   showNotify,

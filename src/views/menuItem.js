@@ -1,4 +1,4 @@
-const { clipboard } =require('electron');
+const { clipboard } = require('electron');
 
 const uploadList = []; // 将已上传的图片保存在内存中 todo 保存到本地
 const clipboardImageList = []; // 保存最近未上传的图片
@@ -50,23 +50,27 @@ const createClipboardImageItem = () => {
     // 点击事件
     const upload = () => {
       const buffer = raw.toPNG();
-      uploadBufferImage(buffer).then((url) => {
-        // 更新列表
-        addToImageList(uploadList, { img, url });
-        removeFromClipboardList(img);
+      uploadBufferImage(buffer)
+        .then((url) => {
+          // 更新列表
+          addToImageList(uploadList, { img, url });
+          removeFromClipboardList(img);
 
-        // 自动复制url
-        copyUrl(url);
-        Util.showNotify(`上传到七牛成功，链接${url}已经复制到剪切板`);
-      }).catch((e) => {
-        console.log(e);
-        Util.showNotify('图片上传失败');
-      });
+          // 自动复制url
+          copyUrl(url);
+          Util.showNotify(`上传到七牛成功，链接${url}已经复制到剪切板`);
+        })
+        .catch((e) => {
+          console.log(e);
+          Util.showNotify('图片上传失败');
+        });
     };
-    return { label: (index + 1).toString(),
+    return {
+      label: (index + 1).toString(),
       icon: row.img,
       type: 'normal',
-      click: upload };
+      click: upload
+    };
   });
 };
 
@@ -76,10 +80,12 @@ const createUploadItem = () => uploadList.map(({ img, url }, index) => {
     const text = copyUrl(url);
     Util.showNotify(`链接${text}已经复制到剪切板`);
   };
-  return { label: (index + 1).toString(),
+  return {
+    label: (index + 1).toString(),
     icon: img,
     type: 'normal',
-    click: handler };
+    click: handler
+  };
 });
 
 // 清空列表

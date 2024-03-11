@@ -1,4 +1,4 @@
-const { Menu, Tray, BrowserWindow } = require('electron')
+const { Menu, Tray, BrowserWindow } = require('electron');
 
 const path = require('path');
 
@@ -16,7 +16,9 @@ const openSettingWindow = () => {
   const url = `file://${path.resolve(__dirname, './setting.html')}`;
   settingWindow.loadURL(url);
   // settingWindow.webContents.openDevTools();
-  settingWindow.on('closed', () => { settingWindow = null; });
+  settingWindow.on('closed', () => {
+    settingWindow = null;
+  });
 };
 
 // 保存开关
@@ -42,7 +44,11 @@ const createTray = (app) => {
       label: '更多',
       type: 'submenu',
       submenu: [
-        { label: '退出', type: 'normal', click: () => { app.quit(); } },
+        {
+          label: '退出', type: 'normal', click: () => {
+            app.quit();
+          }
+        },
       ],
     };
     const template = [
@@ -50,14 +56,25 @@ const createTray = (app) => {
       { label: '', type: 'separator' },
       { label: '已上传', type: 'normal', enabled: false },
       { label: '', type: 'separator' },
-      { label: 'markdown图片格式', type: 'checkbox', checked: config.autoMarkdown, click: saveConfig.bind(null, 'autoMarkdown') },
-      { label: '上传前压缩图片', type: 'checkbox', checked: config.compressImage, click: saveConfig.bind(null, 'compressImage') },
-      { label: '偏好设置', type: 'normal', click: openSettingWindow },
+      {
+        label: 'markdown图片格式',
+        type: 'checkbox',
+        checked: config.autoMarkdown,
+        click: saveConfig.bind(null, 'autoMarkdown')
+      },
+      {
+        label: '上传前压缩图片',
+        type: 'checkbox',
+        checked: config.compressImage,
+        click: saveConfig.bind(null, 'compressImage')
+      },
+      { label: '图床设置', type: 'normal', click: openSettingWindow },
       { label: '清除图片记录', type: 'normal', click: clearRecordList },
       more,
     ];
 
-    const getIndexByLabel = label => template.map(item => item.label).indexOf(label);
+    const getIndexByLabel = label => template.map(item => item.label)
+      .indexOf(label);
 
     // 如果剪切板中有图片，则添加到待上传列表
     const clipboardImageList = createClipboardImageItem();
@@ -81,4 +98,4 @@ const createTray = (app) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-module.exports ={ createTray };
+module.exports = { createTray };
