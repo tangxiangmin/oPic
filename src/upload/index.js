@@ -27,12 +27,12 @@ async function compressImage(filePath, destination) {
   return target;
 }
 
-function qiNiuUpload(img) {
+function qiNiuUpload(key, filePath) {
   try {
     const { upload: uploadConfig } = configUtil.getConfig();
     const upload = createUploadQiNiu(uploadConfig.qiNiu);
 
-    return upload(img);
+    return upload(key, filePath);
   } catch (e) {
     console.log('缺少config.json配置文件');
     return Promise.reject(e);
