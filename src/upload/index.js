@@ -8,6 +8,7 @@ const webp = require('webp-converter');
 // const imagePNG = require('imagemin-pngquant');
 
 const createUploadQiNiu = require('./qiniu');
+const createUploadR2 = require('./r2');
 const configUtil = require('../util/config');
 const sizeOf = require('image-size');
 const crypto = require('crypto');
@@ -39,8 +40,21 @@ function qiNiuUpload(key, filePath) {
   }
 }
 
+function r2Upload(key, filePath) {
+  try {
+    const { upload: uploadConfig } = configUtil.getConfig();
+    const upload = createUploadR2(uploadConfig.r2);
+
+    return upload(key, filePath);
+  } catch (e) {
+    console.log('缺少R2配置');
+    return Promise.reject(e);
+  }
+}
+
 async function uploadBufferImage(buffer) {
-  const { compressImage: needCompress } = configUtil.getConfig();
+  const config = configUtil.getConfig();
+  const { compressImage: needCompress, uploadType = 'qiniu' } = config;
   const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
   const folder = path.resolve(__dirname, '../tmp/');
   await fs.ensureDir(folder);
@@ -57,7 +71,13 @@ async function uploadBufferImage(buffer) {
   const hash = getFileHash(filePath);
   const key = `oPic/${dimensions.width + 'x' + dimensions.height}/${hash}${ext}`;
 
-  const url = await qiNiuUpload(key, filePath); // 上传到七牛
+  let url;
+  // 根据配置选择上传方式
+  if (uploadType === 'r2') {
+    url = await r2Upload(key, filePath); // 上传到 Cloudflare R2
+  } else {
+    url = await qiNiuUpload(key, filePath); // 上传到七牛（默认）
+  }
 
   await fs.unlinkSync(filePath); // 删除临时文件
   return url;

@@ -11,11 +11,19 @@ const openSettingWindow = () => {
   settingWindow = new BrowserWindow({
     width: 600,
     height: 400,
+    webPreferences: {
+      nodeIntegration: true,        // 允许在渲染进程中使用 Node.js API
+      contextIsolation: false,      // 禁用上下文隔离，允许 require()
+      enableRemoteModule: true      // 启用远程模块（如果需要）
+    }
   });
 
   const url = `file://${path.resolve(__dirname, './setting.html')}`;
   settingWindow.loadURL(url);
+  
+  // 启用开发者工具以便调试
   // settingWindow.webContents.openDevTools();
+  
   settingWindow.on('closed', () => {
     settingWindow = null;
   });

@@ -4,10 +4,18 @@ const path = require('path');
 const defaultConfig = {
   autoMarkdown: true, // 复制url格式自动转markdown
   compressImage: true, // 上传前压缩图片
+  uploadType: 'r2', // 上传方式：qiniu 或 r2
   upload: {
     qiNiu: {
       accessKey: '',
       secretKey: '',
+      bucket: '',
+      host: '',
+    },
+    r2: {
+      accessKeyId: '',
+      secretAccessKey: '',
+      endpoint: '',
       bucket: '',
       host: '',
     },
